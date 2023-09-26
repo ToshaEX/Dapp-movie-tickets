@@ -3,20 +3,18 @@ import { ethers } from "ethers";
 import { Dispatch } from "react";
 
 interface Props {
-  setIsLoading: Dispatch<React.SetStateAction<boolean>>;
-  getEthereumContract: () => ethers.Contract;
   currentAccount: string;
   ethereum: any;
+  setIsLoading: Dispatch<React.SetStateAction<boolean>>;
+  getEthereumContract: () => ethers.Contract;
   movieTitle: string;
-  rating: number;
 }
 
 export const addMovie = async ({
+  currentAccount,
+  ethereum,
   setIsLoading,
   getEthereumContract,
-  currentAccount,
-  rating,
-  ethereum,
   movieTitle,
 }: Props) => {
   try {
@@ -29,11 +27,12 @@ export const addMovie = async ({
           from: currentAccount,
           to: ownerAddress,
           gas: "0x5208",
-          amount: "0x00",
+          amount: "0x5208",
         },
       ],
     });
-    const movieHash = await movieContract.addMovie(movieTitle, rating, 20);
+
+    const movieHash = await movieContract.addMovie(movieTitle, 20);
     setIsLoading(true);
     console.log(`Loading - ${movieHash.hash}`);
     await movieHash.wait();
