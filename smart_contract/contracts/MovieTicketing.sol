@@ -19,7 +19,7 @@ contract MovieTicketing {
     address private owner =0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266;
     
     event MovieAdded(uint256 _movieIndex,string title, uint256 rating,uint256 totalSeats);
-    event SeatBooked(address owner, uint256[] seatIndex);
+    event SeatBooked(address owner, uint256[] seatIndex,uint256 movieId );
     
 
     MovieStruct[] public movies;
@@ -59,16 +59,16 @@ contract MovieTicketing {
     bool isSeatAvailable;
     isSeatAvailable=checkIsSeatBooked(_movieIndex,_seatIndex);
     require(isSeatAvailable,"Seat already booked");
-    SeatStruct memory seat;
     
-        for(uint256 i=0;i<_seatIndex.length;i++){        
+    for(uint256 i=0;i<_seatIndex.length;i++){        
+        SeatStruct memory seat;
         seat.movieId=_movieIndex;
         seat.seatIndex=_seatIndex[i];
 
-    clientSeats[_owner].push(seat);
-    movieToBookedSeats[_movieIndex].push(_seatIndex[i]);
-        }
-    emit SeatBooked(_owner,_seatIndex);
+        clientSeats[_owner].push(seat);
+        movieToBookedSeats[_movieIndex].push(_seatIndex[i]);
+    }
+    emit SeatBooked(_owner,_seatIndex,_movieIndex);
     }
 
     function getSeatsByMovieId(uint256 _movieId)public view returns(uint256[] memory) {

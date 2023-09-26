@@ -1,5 +1,7 @@
 "use client";
 
+import Button from "@/app/components/Button";
+import Heading from "@/app/components/Heading";
 import { MovieTicketingContext } from "@/context/MovieTicketingContext";
 import { useParams } from "next/navigation";
 import {
@@ -30,15 +32,12 @@ const Seat = ({ seat, setSelectSeats, selectSeats }: SeatProp) => {
   const [color, setColor] = useState(`${seat.isBooked ? "red" : "green"}`);
   const handleClick = () => {
     if (seat.isBooked) return;
-    color === "yellow"
-      ? setColor(`${seat.isBooked ? "red" : "green"}`)
-      : setColor("yellow");
-    if (color === "green") {
+
+    if (color === "green" && selectSeats.length !== 5) {
       setColor("yellow");
       setSelectSeats((prevState) => [...prevState, seat.index]);
     } else {
       setColor("green");
-
       setSelectSeats((prevState) => [
         ...prevState.filter((seatIndex) => seatIndex !== seat.index),
       ]);
@@ -47,8 +46,16 @@ const Seat = ({ seat, setSelectSeats, selectSeats }: SeatProp) => {
   return (
     <div
       key={`seat-${seat.index}`}
-      className={"w-5 h-5 m-2 "}
-      style={{ backgroundColor: color }}
+      className="flex justify-center items-center"
+      style={{
+        backgroundColor: color,
+        opacity: ".5",
+        borderBottom: "5px solid red",
+        margin: ".5rem",
+        width: "2rem",
+        height: "2rem",
+        color: "white",
+      }}
       onClick={handleClick}
     >
       {seat.index}
@@ -59,11 +66,10 @@ const Seat = ({ seat, setSelectSeats, selectSeats }: SeatProp) => {
 export default function Booking() {
   const { id } = useParams();
   const movieId = +id;
-  const { getAllMovies, isLoading, getSeatsByMovieId } = useContext<any>(
-    MovieTicketingContext
-  );
+  const { getAllMovies, isLoading, getSeatsByMovieId, bookingSeats } =
+    useContext<any>(MovieTicketingContext);
   const [movies, setMovies] = useState<MovieType[]>([]);
-  const [seats, setSeats] = useState<SeatsType[]>();
+  const [seats, setSeats] = useState<SeatsType[]>([]);
   const [selectSeats, setSelectSeats] = useState<number[]>([]);
 
   const getAllMoviesAsync = async () => {
@@ -74,8 +80,10 @@ export default function Booking() {
     }));
     setMovies(movieArr);
   };
+
   const getSeatsByMovieIdAsync = async () => {
     const bookedSeatsArr: number[] = await getSeatsByMovieId(movieId);
+    console.log(bookedSeatsArr);
     const seatsArr: SeatsType[] = [];
     for (let i = 0; i < 20; i++) {
       let isBooked = bookedSeatsArr.includes(i);
@@ -85,6 +93,7 @@ export default function Booking() {
       };
       seatsArr.push(seat);
     }
+    console.log(seatsArr);
     setSeats([...seatsArr]);
   };
 
@@ -94,14 +103,19 @@ export default function Booking() {
   }, []);
 
   if (!movies.length || isLoading) return <div>Loading</div>;
+
   const foundMovie = movies.filter((movie) => movie.id === movieId);
-  console.log(movies);
-  console.log(seats);
+
+  const handleBooking = async () => {
+    const amount = 20 * selectSeats.length;
+
+    bookingSeats(amount, selectSeats, movieId);
+  };
 
   return (
     <div>
-      <h1>{foundMovie[0]?.title}</h1>
-      <div className="grid grid-cols-5">
+      <Heading text={foundMovie[0]?.title} />
+      <div className="flex flex-wrap  m-5 w-[15rem] ">
         {seats?.map((seat) => (
           <Seat
             seat={seat}
@@ -111,9 +125,20 @@ export default function Booking() {
           />
         ))}
       </div>
-      {selectSeats.map((seat, i) => (
-        <div key={i}>{seat}</div>
-      ))}
+      <div className={"mx-5"}>Ticket Price : 20 $</div>
+      {selectSeats.length ? (
+        <>
+          <div className={"mx-5"}>
+            <div>Total amount: 20 * {selectSeats.length}</div>
+            <div>
+              {" "}
+              &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;:{" "}
+              {20 * selectSeats.length} $
+            </div>
+          </div>
+          <Button label="Book Now" isLoading={false} onClick={handleBooking} />
+        </>
+      ) : null}
     </div>
   );
 }

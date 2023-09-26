@@ -7,37 +7,45 @@ interface Props {
   ethereum: any;
   setIsLoading: Dispatch<React.SetStateAction<boolean>>;
   getEthereumContract: () => ethers.Contract;
-  movieTitle: string;
+  amount: number;
+  seats: number[];
+  movieId: number;
 }
 
-export const addMovie = async ({
+export const bookingSeats = async ({
   currentAccount,
   ethereum,
-  setIsLoading,
   getEthereumContract,
-  movieTitle,
+  setIsLoading,
+  amount,
+  seats,
+  movieId,
 }: Props) => {
   try {
     const movieContract = getEthereumContract();
-    console.log("get contract");
+    console.log(seats);
     await ethereum.request({
       method: "eth_sendTransaction",
       params: [
         {
           from: currentAccount,
           to: ownerAddress,
-          gas: "0x5208",
-          amount: "0x5208",
+          gas: "0x13880",
+          amount: amount,
         },
       ],
     });
 
-    const movieHash = await movieContract.addMovie(movieTitle, 20);
+    const bookHash = await movieContract.bookSeat(
+      movieId,
+      seats,
+      currentAccount
+    );
     setIsLoading(true);
-    console.log(`Loading - ${movieHash.hash}`);
-    await movieHash.wait();
+    console.log(`Loading - ${bookHash.hash}`);
+    await bookHash.wait();
     setIsLoading(false);
-    console.log(`Done - ${movieHash.hash}`);
+    console.log(`Done - ${bookHash.hash}`);
   } catch (error) {
     console.log(error);
     throw new Error("No ethereum object");

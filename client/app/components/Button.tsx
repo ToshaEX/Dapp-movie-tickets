@@ -3,6 +3,7 @@ import React from "react";
 type Props = {
   label: string;
   isLoading: boolean;
+  onClick?: () => any;
 };
 
 const Loader = () => {
@@ -29,11 +30,12 @@ const Loader = () => {
   );
 };
 
-const Button = ({ label, isLoading }: Props) => {
+const Button = ({ label, isLoading, onClick }: Props) => {
   return (
     <button
       className="self-end m-3 bg-teal-500 p-2 font-semibold text-white hover:bg-teal-400 transition-all duration-500 rounded-md"
       type="submit"
+      onClick={onClick}
     >
       {isLoading ? <Loader /> : label}
     </button>

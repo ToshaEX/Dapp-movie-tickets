@@ -3,6 +3,7 @@ import React, { ReactNode, useEffect, useState } from "react";
 import { ethers } from "ethers";
 import { contractABI, contractAddress, ownerAddress } from "../utils/constants";
 import { addMovie } from "./utils/addMovie";
+import { bookingSeats } from "./utils/bookSeats";
 
 type Prop = {
   children: ReactNode;
@@ -10,6 +11,7 @@ type Prop = {
 
 export const MovieTicketingContext = React.createContext({});
 
+// eslint-disable-next-line
 const { ethereum } = window;
 
 const getEthereumContract = () => {
@@ -20,7 +22,6 @@ const getEthereumContract = () => {
     contractABI,
     signer
   );
-  console.log({ provider, signer, movieTicketContract });
   return movieTicketContract;
 };
 
@@ -58,46 +59,15 @@ export const MovieTicketingProvider = ({ children }: Prop) => {
     }
   };
 
-  const bookingSeats = async () => {
-    try {
-      const movieContract = getEthereumContract();
-
-      await ethereum.request({
-        method: "eth_sendTransaction",
-        params: [
-          {
-            from: currentAccount,
-            to: ownerAddress,
-            gas: "0x5208",
-            amount: "0x5208",
-          },
-        ],
-      });
-
-      const movieHash = await movieContract.bookSeat(
-        0,
-        [0, 3, 4, 2],
-        currentAccount
-      );
-      setIsLoading(true);
-      console.log(`Loading - ${movieHash.hash}`);
-      await movieHash.wait();
-      setIsLoading(false);
-      console.log(`Done - ${movieHash.hash}`);
-    } catch (error) {
-      console.log(error);
-      throw new Error("No ethereum object");
-    }
-  };
-
   const getSeatsByMovieId = async (movieId: number) => {
     try {
       const movieContract = getEthereumContract();
 
       const seats = await movieContract.getSeatsByMovieId(movieId);
       setIsLoading(true);
-      const seatsArr = seats.map((value: string) => parseInt(value, 16));
-      console.log(seatsArr);
+      const seatsArr = seats.map(
+        (value: string) => +ethers.BigNumber.from(value).toString()
+      );
       setIsLoading(false);
       return seatsArr;
     } catch (error) {
@@ -112,7 +82,6 @@ export const MovieTicketingProvider = ({ children }: Prop) => {
 
       const movies = await movieContract.getAllMovies();
       setIsLoading(true);
-      console.log(movies);
       setIsLoading(false);
       return movies;
     } catch (error) {
@@ -155,7 +124,20 @@ export const MovieTicketingProvider = ({ children }: Prop) => {
           });
         },
         getAllMovies,
-        bookingSeats,
+        bookingSeats: async (
+          amount: number,
+          seats: number[],
+          movieId: number
+        ) =>
+          bookingSeats({
+            amount,
+            seats,
+            movieId,
+            currentAccount,
+            ethereum,
+            getEthereumContract,
+            setIsLoading,
+          }),
         getSeatsByMovieId,
         getBookedSeatsByClientId,
         isLoading,
