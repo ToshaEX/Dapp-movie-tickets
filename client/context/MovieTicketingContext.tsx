@@ -5,6 +5,7 @@ import { contractABI, contractAddress, ownerAddress } from "../constants";
 import { addMovie } from "./utils/addMovie";
 import { bookingSeats } from "./utils/bookSeats";
 import { ExternalProvider } from "@ethersproject/providers";
+import { notify } from "./utils/notify";
 
 type Prop = {
   children: ReactNode;
@@ -43,11 +44,9 @@ export const MovieTicketingProvider = ({ children }: Prop) => {
         setCurrentAccount(accounts[0]);
       } else {
         setIsLoading(false);
-        console.log("No Account found");
       }
     } catch (error) {
       setIsLoading(false);
-      console.log(error);
       throw new Error("No ethereum object");
     }
   };
@@ -61,11 +60,11 @@ export const MovieTicketingProvider = ({ children }: Prop) => {
       const accounts = await ethereum.request({
         method: "eth_requestAccounts",
       });
-      console.log("accounts:", accounts);
       setCurrentAccount(accounts[0]);
+      notify({ message: "Wallet Connected", type: "success" });
     } catch (error) {
       console.log(error);
-      throw new Error("No ethereum object");
+      notify({ message: "Please install Metamask", type: "error" });
     }
   };
 

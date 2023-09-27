@@ -26,7 +26,6 @@ contract MovieTicketing {
 
     mapping (address => SeatStruct[]) public clientSeats;
     mapping(uint256 => uint256[]) public movieToBookedSeats;
-    mapping(uint256 => mapping(uint256 => uint256[])) public movieToBookedSeatss;
 
     function addMovie(string memory _title,uint256 _rating,uint256 _totalSeats) public {
         require(msg.sender==owner,"You don't  have  privilage  to Add movie");
@@ -59,8 +58,9 @@ contract MovieTicketing {
 
     function bookSeat(uint256 _movieIndex,uint256[] memory _seatIndex,address _owner) public {
     bool isSeatAvailable;
-    uint256 timeStamp =block.timestamp;
+    uint timeStamp =block.timestamp;
     isSeatAvailable=checkIsSeatBooked(_movieIndex,_seatIndex);
+    require(_seatIndex.length<5,"Maximum 5 seats can be book,please select  5 or less than 5 seats");
     require(isSeatAvailable,"Seat already booked");
     
     for(uint256 i=0;i<_seatIndex.length;i++){        

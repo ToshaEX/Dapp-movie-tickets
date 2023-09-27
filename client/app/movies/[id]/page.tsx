@@ -1,4 +1,5 @@
 "use client";
+import Loading from "@/app/loading";
 import { MovieTicketingContext } from "@/context/MovieTicketingContext";
 import dynamic from "next/dynamic";
 import { useParams } from "next/navigation";
@@ -103,7 +104,7 @@ export default function Booking() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  if (!movies.length || isLoading) return <div>Loading</div>;
+  if (!movies.length || isLoading) return <Loading />;
 
   const foundMovie = movies.filter((movie) => movie.id === movieId);
 

@@ -4,6 +4,7 @@ import { useContext, useEffect, useState } from "react";
 import Link from "next/link";
 import { ethers } from "ethers";
 import dynamic from "next/dynamic";
+import Loading from "../loading";
 
 const Heading = dynamic(() => import("@/components/Heading"));
 
@@ -64,8 +65,9 @@ export default function Movies() {
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  //TODO: implement Loading
-  if (isLoading) return <div>Loading</div>;
+
+  if (isLoading) return <Loading />;
+
   if (!movies.length)
     return (
       <div className="m-5 text-gray-500 text-2xl">

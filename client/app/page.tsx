@@ -3,6 +3,7 @@ import { MovieTicketingContext } from "@/context/MovieTicketingContext";
 import { useContext } from "react";
 import Link from "next/link";
 import dynamic from "next/dynamic";
+import Loading from "./loading";
 
 const Button = dynamic(() => import("@/components/Button"));
 const Heading = dynamic(() => import("@/components/Heading"));
@@ -11,7 +12,7 @@ export default function Home() {
   const { connectWallet, currentAccount, isLoading } = useContext<any>(
     MovieTicketingContext
   );
-  if (isLoading) return <div>Loading</div>;
+  if (isLoading) return <Loading />;
   return (
     <main className="flex h-[90vh] flex-col justify-center items-center">
       <Heading text="Welcome to Movie Ticketing App" />

@@ -1,9 +1,10 @@
 "use client";
 import { MovieTicketingContext } from "@/context/MovieTicketingContext";
 import { Formik } from "formik";
-import { useContext } from "react";
+import { Suspense, useContext } from "react";
 import { notify } from "@/context/utils/notify";
 import dynamic from "next/dynamic";
+import Loading from "@/app/loading";
 
 const Button = dynamic(() => import("@/components/Button"));
 const Heading = dynamic(() => import("@/components/Heading"));
@@ -19,7 +20,7 @@ const initialValues: FormPropType = { title: "", rating: 0 };
 export default function AddMovie() {
   const { addMovie } = useContext<any>(MovieTicketingContext);
   return (
-    <div>
+    <Suspense fallback={<Loading />}>
       <Heading text="Add Movie" />
 
       <Formik
@@ -71,6 +72,6 @@ export default function AddMovie() {
           </form>
         )}
       </Formik>
-    </div>
+    </Suspense>
   );
 }

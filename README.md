@@ -33,7 +33,7 @@ npm i
 
 
 
-#run application on development environment
+# Run application on development environment
 
 npm run dev
 
@@ -57,15 +57,15 @@ npm i
 
 npx hardhat node
 
+# Locate MovieTicketing.sol and change replace owner with your preference (*)
 
-
-#Open new terminal and run bellow command, it return deployed address(*)
+# Open new terminal and run bellow command, it return deployed address(*)
 
 npx hardhat run scripts/deploy.ts --network localhost
 
 
 
-#Locate to artifact folder and find MovieTicketing.json, then Copy whole file(*)
+# Locate to artifact folder and find MovieTicketing.json, then Copy whole file(*)
 
 
 
