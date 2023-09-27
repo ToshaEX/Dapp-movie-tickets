@@ -1,8 +1,6 @@
 "use client";
-
-import Button from "@/app/components/Button";
-import Heading from "@/app/components/Heading";
 import { MovieTicketingContext } from "@/context/MovieTicketingContext";
+import dynamic from "next/dynamic";
 import { useParams } from "next/navigation";
 import {
   Dispatch,
@@ -11,6 +9,9 @@ import {
   useEffect,
   useState,
 } from "react";
+
+const Button = dynamic(() => import("@/components/Button"));
+const Heading = dynamic(() => import("@/components/Heading"));
 
 type MovieType = {
   id: number;
@@ -96,10 +97,10 @@ export default function Booking() {
     console.log(seatsArr);
     setSeats([...seatsArr]);
   };
-
   useEffect(() => {
     getAllMoviesAsync();
     getSeatsByMovieIdAsync();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   if (!movies.length || isLoading) return <div>Loading</div>;
@@ -107,7 +108,7 @@ export default function Booking() {
   const foundMovie = movies.filter((movie) => movie.id === movieId);
 
   const handleBooking = async () => {
-    const amount = 20 * selectSeats.length;
+    const amount = 13000000000000000 * selectSeats.length;
 
     bookingSeats(amount, selectSeats, movieId);
   };

@@ -1,6 +1,7 @@
-import { ownerAddress } from "@/utils/constants";
+import { ownerAddress } from "@/constants";
 import { ethers } from "ethers";
 import { Dispatch } from "react";
+import { notify } from "./notify";
 
 interface Props {
   setIsLoading: Dispatch<React.SetStateAction<boolean>>;
@@ -35,12 +36,17 @@ export const addMovie = async ({
     });
     const movieHash = await movieContract.addMovie(movieTitle, rating, 20);
     setIsLoading(true);
+    notify({ message: "Movie Added", type: "success" });
     console.log(`Loading - ${movieHash.hash}`);
     await movieHash.wait();
     setIsLoading(false);
     console.log(`Done - ${movieHash.hash}`);
+    return movieHash;
   } catch (error) {
     console.log(error);
-    throw new Error("No ethereum object");
+    notify({
+      message: "Something went Wrong, Please try again",
+      type: "error",
+    });
   }
 };

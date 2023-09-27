@@ -1,9 +1,10 @@
 "use client";
 import React, { ReactNode, useEffect, useState } from "react";
 import { ethers } from "ethers";
-import { contractABI, contractAddress, ownerAddress } from "../utils/constants";
+import { contractABI, contractAddress, ownerAddress } from "../constants";
 import { addMovie } from "./utils/addMovie";
 import { bookingSeats } from "./utils/bookSeats";
+import { ExternalProvider } from "@ethersproject/providers";
 
 type Prop = {
   children: ReactNode;
@@ -11,35 +12,41 @@ type Prop = {
 
 export const MovieTicketingContext = React.createContext({});
 
-// eslint-disable-next-line
-const { ethereum } = window;
-
-const getEthereumContract = () => {
-  const provider = new ethers.providers.Web3Provider(ethereum);
-  const signer = provider.getSigner();
-  const movieTicketContract = new ethers.Contract(
-    contractAddress,
-    contractABI,
-    signer
-  );
-  return movieTicketContract;
-};
-
 export const MovieTicketingProvider = ({ children }: Prop) => {
   const [currentAccount, setCurrentAccount] = useState<any>();
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [ethereum, setEthereum] = useState<ExternalProvider>(window.ethereum);
+
+  const getEthereumContract = () => {
+    if (!ethereum) window.alert("Please Install metamask Wallet");
+
+    const provider = new ethers.providers.Web3Provider(ethereum);
+    const signer = provider.getSigner();
+    const movieTicketContract = new ethers.Contract(
+      contractAddress,
+      contractABI,
+      signer
+    );
+    return movieTicketContract;
+  };
 
   const isWalletConnected = async () => {
     try {
-      if (!ethereum) window.alert("Please Install metamask Wallet");
+      if (!ethereum?.request) {
+        window.alert("Please Install metamask Wallet");
+        return;
+      }
       const accounts = await ethereum?.request({ method: "eth_accounts" });
 
       if (accounts.length) {
+        setIsLoading(false);
         setCurrentAccount(accounts[0]);
       } else {
+        setIsLoading(false);
         console.log("No Account found");
       }
     } catch (error) {
+      setIsLoading(false);
       console.log(error);
       throw new Error("No ethereum object");
     }
@@ -47,8 +54,11 @@ export const MovieTicketingProvider = ({ children }: Prop) => {
 
   const connectWallet = async () => {
     try {
-      if (!ethereum) window.alert("Please Install metamask Wallet");
-      const accounts = await ethereum?.request({
+      if (!ethereum?.request) {
+        window.alert("Please Install metamask Wallet");
+        return;
+      }
+      const accounts = await ethereum.request({
         method: "eth_requestAccounts",
       });
       console.log("accounts:", accounts);
@@ -103,8 +113,9 @@ export const MovieTicketingProvider = ({ children }: Prop) => {
       throw new Error("No ethereum object");
     }
   };
-
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
+    setEthereum(window.ethereum as ExternalProvider);
     isWalletConnected();
   }, []);
 
@@ -141,6 +152,7 @@ export const MovieTicketingProvider = ({ children }: Prop) => {
         getSeatsByMovieId,
         getBookedSeatsByClientId,
         isLoading,
+        ownerAddress,
       }}
     >
       {children}

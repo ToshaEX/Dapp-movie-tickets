@@ -1,10 +1,13 @@
 "use client";
-import Button from "@/app/components/Button";
-import Heading from "@/app/components/Heading";
-import TextInput from "@/app/components/TextInput";
 import { MovieTicketingContext } from "@/context/MovieTicketingContext";
 import { Formik } from "formik";
 import { useContext } from "react";
+import { notify } from "@/context/utils/notify";
+import dynamic from "next/dynamic";
+
+const Button = dynamic(() => import("@/components/Button"));
+const Heading = dynamic(() => import("@/components/Heading"));
+const TextInput = dynamic(() => import("@/components/TextInput"));
 
 type FormPropType = {
   title: string;
@@ -14,7 +17,7 @@ type FormPropType = {
 const initialValues: FormPropType = { title: "", rating: 0 };
 
 export default function AddMovie() {
-  const { getAllMovies, addMovie } = useContext<any>(MovieTicketingContext);
+  const { addMovie } = useContext<any>(MovieTicketingContext);
   return (
     <div>
       <Heading text="Add Movie" />
@@ -23,6 +26,11 @@ export default function AddMovie() {
         initialValues={initialValues}
         enableReinitialize={true}
         onSubmit={(values, { setSubmitting, resetForm }) => {
+          if (!values.rating || !values.title.length) {
+            notify({ message: "Please fill all fields", type: "info" });
+            setSubmitting(false);
+            return;
+          }
           setSubmitting(true);
           addMovie(values.title, values.rating).then(() => {
             setSubmitting(false);

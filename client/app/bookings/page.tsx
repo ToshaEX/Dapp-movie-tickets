@@ -1,8 +1,9 @@
 "use client";
 import { MovieTicketingContext } from "@/context/MovieTicketingContext";
 import { useContext, useEffect, useState } from "react";
-import Heading from "../components/Heading";
+import dynamic from "next/dynamic";
 
+const Heading = dynamic(() => import("@/components/Heading"));
 type MovieType = {
   id: number;
   title: string;
@@ -13,12 +14,9 @@ type SeatType = {
 };
 
 export default function Bookings() {
-  const {
-    getAllMovies,
-    isLoading,
-    getSeatsByMovieId,
-    getBookedSeatsByClientId,
-  } = useContext<any>(MovieTicketingContext);
+  const { getAllMovies, isLoading, getBookedSeatsByClientId } = useContext<any>(
+    MovieTicketingContext
+  );
   const [bookings, setBookings] = useState<SeatType[]>([]);
   const [movies, setMovies] = useState<MovieType[]>([]);
 
@@ -38,28 +36,29 @@ export default function Bookings() {
       seatIndex: parseInt(bookings["seatIndex"]),
     }));
     setBookings(bookingsArr);
-    console.log("bookings", bookings);
   };
-
   useEffect(() => {
     getAllMoviesAsync();
     getBookingsAsync();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  if (isLoading || !movies.length || !bookings.length)
-    return <div>Loading</div>;
-  console.log(movies);
+  if (isLoading) return <div>Loading</div>;
+
   return (
     <div className="flex flex-col h-[80vh]">
       <Heading text="My Tickets" />
       <div className="flex flex-row flex-wrap overflow-y-auto ">
+        {!bookings.length ? (
+          <div className="text-2xl m-5">Oops, No Tickets found 🤔</div>
+        ) : null}
         {bookings?.map((booking) => (
           <div
             key={`${booking.movieId}-seat-id-${booking?.seatIndex}-ticket`}
-            className="border-2 m-2 px-2 py-5 flex flex-row  w-[20vw] items-center justify-between"
+            className="bg-teal-500 hover:bg-teal-400  transition-all duration-700 hover:shadow-md m-2 px-2 py-5 flex flex-row  w-[20vw] items-center justify-between"
           >
             <div>
-              <div className="text-2xl text-gray-500">
+              <div className="text-2xl text-gray-800 capitalize">
                 {
                   movies?.filter((movie) => movie.id === booking.movieId)[0]
                     ?.title

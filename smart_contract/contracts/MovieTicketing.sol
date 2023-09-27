@@ -12,19 +12,21 @@ struct MovieStruct {
 struct SeatStruct{
     uint256 movieId;
     uint256 seatIndex;
+    uint256 timeStamp;
 }
 
 contract MovieTicketing {
     uint256 private movieCounter;
     address private owner =0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266;
+    MovieStruct[] public movies;
     
     event MovieAdded(uint256 _movieIndex,string title, uint256 rating,uint256 totalSeats);
-    event SeatBooked(address owner, uint256[] seatIndex,uint256 movieId );
+    event SeatBooked(address owner, uint256[] seatIndex,uint256 movieId ,uint256 timeStamp);
     
 
-    MovieStruct[] public movies;
     mapping (address => SeatStruct[]) public clientSeats;
     mapping(uint256 => uint256[]) public movieToBookedSeats;
+    mapping(uint256 => mapping(uint256 => uint256[])) public movieToBookedSeatss;
 
     function addMovie(string memory _title,uint256 _rating,uint256 _totalSeats) public {
         require(msg.sender==owner,"You don't  have  privilage  to Add movie");
@@ -57,6 +59,7 @@ contract MovieTicketing {
 
     function bookSeat(uint256 _movieIndex,uint256[] memory _seatIndex,address _owner) public {
     bool isSeatAvailable;
+    uint256 timeStamp =block.timestamp;
     isSeatAvailable=checkIsSeatBooked(_movieIndex,_seatIndex);
     require(isSeatAvailable,"Seat already booked");
     
@@ -64,16 +67,17 @@ contract MovieTicketing {
         SeatStruct memory seat;
         seat.movieId=_movieIndex;
         seat.seatIndex=_seatIndex[i];
-
+        seat.timeStamp=timeStamp;
         clientSeats[_owner].push(seat);
         movieToBookedSeats[_movieIndex].push(_seatIndex[i]);
     }
-    emit SeatBooked(_owner,_seatIndex,_movieIndex);
+    emit SeatBooked(_owner,_seatIndex,_movieIndex,timeStamp);
     }
 
     function getSeatsByMovieId(uint256 _movieId)public view returns(uint256[] memory) {
         return movieToBookedSeats[_movieId];
     }
+
 
     function getSeatsByClientId()public view returns(SeatStruct[] memory) {
         return clientSeats[msg.sender];

@@ -1,3 +1,0 @@
-npx hardhat run scripts/deploy.ts --network goerli
-
-deploy hash="0x89c80d0184cF05F540DF9D00ad5D852C8ca074A5"
