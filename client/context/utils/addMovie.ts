@@ -22,7 +22,6 @@ export const addMovie = async ({
 }: Props) => {
   try {
     const movieContract = getEthereumContract();
-    console.log("get contract");
     await ethereum.request({
       method: "eth_sendTransaction",
       params: [
@@ -37,10 +36,8 @@ export const addMovie = async ({
     const movieHash = await movieContract.addMovie(movieTitle, rating, 20);
     setIsLoading(true);
     notify({ message: "Movie Added", type: "success" });
-    console.log(`Loading - ${movieHash.hash}`);
     await movieHash.wait();
     setIsLoading(false);
-    console.log(`Done - ${movieHash.hash}`);
     return movieHash;
   } catch (error) {
     console.log(error);

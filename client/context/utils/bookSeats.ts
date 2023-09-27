@@ -24,7 +24,6 @@ export const bookingSeats = async ({
 }: Props) => {
   try {
     const movieContract = getEthereumContract();
-    console.log(seats);
     await ethereum.request({
       method: "eth_sendTransaction",
       params: [
@@ -43,11 +42,9 @@ export const bookingSeats = async ({
       currentAccount
     );
     setIsLoading(true);
-    console.log(`Loading - ${bookHash.hash}`);
     await bookHash.wait();
     setIsLoading(false);
     notify({ message: "Booked seats", type: "success" });
-    console.log(`Done - ${bookHash.hash}`);
     window.location.reload();
   } catch (error) {
     console.log(error);

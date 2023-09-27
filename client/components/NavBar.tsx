@@ -43,11 +43,7 @@ const DesktopNav = ({ currentAccount }: Props) => {
     { label: "Movies", route: routes.MOVIES },
     { label: "My Tickets", route: routes.BOOKINGS },
   ];
-  console.log(
-    currentAccount.localeCompare(ownerAddress),
-    currentAccount,
-    ownerAddress
-  );
+
   return (
     <div className="flex  flex-row justify-between items-center bg-teal-500  left-0 right-0">
       {currentAccount === ownerAddress ? (

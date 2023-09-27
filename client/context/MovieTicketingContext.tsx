@@ -104,7 +104,6 @@ export const MovieTicketingProvider = ({ children }: Prop) => {
 
       const mySeats = await movieContract.getSeatsByClientId();
       setIsLoading(true);
-      console.log(mySeats);
       setIsLoading(false);
       return mySeats;
     } catch (error) {

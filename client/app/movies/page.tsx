@@ -27,7 +27,6 @@ export default function Movies() {
   const [seats, setSeats] = useState<SeatType[]>([]);
 
   const getSeatsAsync = async (movieIds: number[], moviesArr: MovieType[]) => {
-    console.log("movies", moviesArr, movieIds);
     const arr: SeatType[] = [];
     for (let i = 0; i < movieIds.length; i++) {
       const seats = await getSeatsByMovieId(movieIds[i]);

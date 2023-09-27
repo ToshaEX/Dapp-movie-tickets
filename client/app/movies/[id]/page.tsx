@@ -85,7 +85,6 @@ export default function Booking() {
 
   const getSeatsByMovieIdAsync = async () => {
     const bookedSeatsArr: number[] = await getSeatsByMovieId(movieId);
-    console.log(bookedSeatsArr);
     const seatsArr: SeatsType[] = [];
     for (let i = 0; i < 20; i++) {
       let isBooked = bookedSeatsArr.includes(i);
@@ -95,7 +94,6 @@ export default function Booking() {
       };
       seatsArr.push(seat);
     }
-    console.log(seatsArr);
     setSeats([...seatsArr]);
   };
   useEffect(() => {
