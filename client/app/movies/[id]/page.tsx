@@ -107,8 +107,8 @@ export default function Booking() {
   const foundMovie = movies.filter((movie) => movie.id === movieId);
 
   const handleBooking = async () => {
-    const amount = 13000000000000000 * selectSeats.length;
-
+    const amount = BigInt(10000000000000000) * BigInt(selectSeats.length);
+    console.log(amount);
     bookingSeats(amount, selectSeats, movieId);
   };
 

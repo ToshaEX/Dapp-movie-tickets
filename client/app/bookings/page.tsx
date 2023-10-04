@@ -22,7 +22,7 @@ export default function Bookings() {
 
   const getAllMoviesAsync = async () => {
     const movies = await getAllMovies();
-    const movieArr = movies.map((movie: any) => ({
+    const movieArr = movies?.map((movie: any) => ({
       title: movie["title"],
       id: parseInt(movie["movieIndex"]),
     }));
@@ -31,7 +31,7 @@ export default function Bookings() {
 
   const getBookingsAsync = async () => {
     const bookingsSeats = await getBookedSeatsByClientId();
-    const bookingsArr = bookingsSeats.map((bookings: any) => ({
+    const bookingsArr = bookingsSeats?.map((bookings: any) => ({
       movieId: parseInt(bookings["movieId"]),
       seatIndex: parseInt(bookings["seatIndex"]),
     }));
@@ -49,7 +49,7 @@ export default function Bookings() {
     <div className="flex flex-col h-[80vh]">
       <Heading text="My Tickets" />
       <div className="flex flex-row flex-wrap overflow-y-auto ">
-        {!bookings.length ? (
+        {!bookings?.length ? (
           <div className="text-2xl m-5">Oops, No Tickets found 🤔</div>
         ) : null}
         {bookings?.map((booking) => (

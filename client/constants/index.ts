@@ -11,6 +11,6 @@ export enum routes {
 
 //*Replace with your props*/
 // Contract Address
-export const contractAddress = "0x322813Fd9A801c5507c9de605d63CEA4f2CE6c44";
+export const contractAddress = "0x0165878A594ca255338adfa4d48449f69242Eb8F";
 // Movie Application owner Wallet address
 export const ownerAddress = "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266";

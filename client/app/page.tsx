@@ -33,6 +33,7 @@ export default function Home() {
           onClick={connectWallet}
           label="Connect Wallet"
           isLoading={false}
+          alignSelf="center"
         />
       ) : (
         <p className="text-gray-500 text-5xl text-center m-5">

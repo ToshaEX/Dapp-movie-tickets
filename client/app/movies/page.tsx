@@ -43,7 +43,7 @@ export default function Movies() {
     const moviesArr = await getAllMovies();
     const arr: MovieType[] = [];
     const movieIdArr: number[] = [];
-    for (let i = 0; i < moviesArr.length; i++) {
+    for (let i = 0; i < moviesArr?.length; i++) {
       const movieId = ethers.BigNumber.from(
         moviesArr[i]["movieIndex"]
       ).toNumber();

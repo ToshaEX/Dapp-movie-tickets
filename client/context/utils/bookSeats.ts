@@ -24,6 +24,7 @@ export const bookingSeats = async ({
 }: Props) => {
   try {
     const movieContract = getEthereumContract();
+
     await ethereum.request({
       method: "eth_sendTransaction",
       params: [
@@ -31,7 +32,7 @@ export const bookingSeats = async ({
           from: currentAccount,
           to: ownerAddress,
           gas: "0x13880",
-          amount: amount,
+          value: ethers.utils.hexlify(amount),
         },
       ],
     });

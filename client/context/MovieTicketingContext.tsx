@@ -95,9 +95,10 @@ export const MovieTicketingProvider = ({ children }: Prop) => {
       return movies;
     } catch (error) {
       console.log(error);
-      throw new Error("No ethereum object");
+      notify({ message: "Sorry, Please try again later", type: "info" });
     }
   };
+
   const getBookedSeatsByClientId = async () => {
     try {
       const movieContract = getEthereumContract();
@@ -108,7 +109,6 @@ export const MovieTicketingProvider = ({ children }: Prop) => {
       return mySeats;
     } catch (error) {
       console.log(error);
-      throw new Error("No ethereum object");
     }
   };
   // eslint-disable-next-line react-hooks/exhaustive-deps

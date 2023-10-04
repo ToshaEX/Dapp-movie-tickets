@@ -3,6 +3,7 @@ import React from "react";
 type Props = {
   label: string;
   isLoading: boolean;
+  alignSelf?: string;
   onClick?: () => any;
 };
 
@@ -30,10 +31,11 @@ const Loader = () => {
   );
 };
 
-const Button = ({ label, isLoading, onClick }: Props) => {
+const Button = ({ label, isLoading, onClick, alignSelf }: Props) => {
   return (
     <button
-      className="self-end m-3 bg-teal-500 p-2 font-semibold text-white hover:bg-teal-400 transition-all duration-500 rounded-md"
+      className="m-3 bg-teal-500 p-2 font-semibold text-white hover:bg-teal-400 transition-all duration-500 rounded-md"
+      style={{ alignSelf }}
       type="submit"
       onClick={onClick}
     >

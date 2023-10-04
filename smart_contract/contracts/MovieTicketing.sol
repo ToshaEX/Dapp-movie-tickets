@@ -57,21 +57,21 @@ contract MovieTicketing {
     }
 
     function bookSeat(uint256 _movieIndex,uint256[] memory _seatIndex,address _owner) public {
-    bool isSeatAvailable;
-    uint timeStamp =block.timestamp;
-    isSeatAvailable=checkIsSeatBooked(_movieIndex,_seatIndex);
-    require(_seatIndex.length<5,"Maximum 5 seats can be book,please select  5 or less than 5 seats");
-    require(isSeatAvailable,"Seat already booked");
+        bool isSeatAvailable;
+        uint timeStamp =block.timestamp;
+        isSeatAvailable=checkIsSeatBooked(_movieIndex,_seatIndex);
+        require(_seatIndex.length<=5,"Maximum 5 seats can be book,please select  5 or less than 5 seats");
+        require(isSeatAvailable,"Seat already booked");
     
-    for(uint256 i=0;i<_seatIndex.length;i++){        
-        SeatStruct memory seat;
-        seat.movieId=_movieIndex;
-        seat.seatIndex=_seatIndex[i];
-        seat.timeStamp=timeStamp;
-        clientSeats[_owner].push(seat);
-        movieToBookedSeats[_movieIndex].push(_seatIndex[i]);
-    }
-    emit SeatBooked(_owner,_seatIndex,_movieIndex,timeStamp);
+        for(uint256 i=0;i<_seatIndex.length;i++){        
+            SeatStruct memory seat;
+            seat.movieId=_movieIndex;
+            seat.seatIndex=_seatIndex[i];
+            seat.timeStamp=timeStamp;
+            clientSeats[_owner].push(seat);
+            movieToBookedSeats[_movieIndex].push(_seatIndex[i]);
+        }
+        emit SeatBooked(_owner,_seatIndex,_movieIndex,timeStamp);
     }
 
     function getSeatsByMovieId(uint256 _movieId)public view returns(uint256[] memory) {
